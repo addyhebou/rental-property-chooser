@@ -1,16 +1,17 @@
-import { FormEvent } from 'react';
 import { unitMarketPrices } from './constants';
 import { UnitMap } from './types';
 import { useStore } from './useStore';
+import { MARKET_RATES_FOR_2025 } from './marketRatesFor2025';
 
 export const handleValueChange = () => {
-  const { testUnitMap, homePrice, interestRate, loanTermInYears } = useStore();
+  const { testUnitMap, homePrice, interestRate, loanTermInYears, zipcode } =
+    useStore();
   // Calculate estimated monthly mortage payments.
   const estimatedMortgage = Math.round(
     calculateMortgage(homePrice, interestRate / 100, loanTermInYears)
   );
   // Calculate estimated income from all units in the property.
-  const estimatedIncome = Math.round(calculateIncome(testUnitMap));
+  const estimatedIncome = Math.round(calculateIncome(testUnitMap, zipcode));
 
   // Calculate and return the profit.
   const profit = Math.round(estimatedIncome - estimatedMortgage);
@@ -18,7 +19,8 @@ export const handleValueChange = () => {
   const unitsWithOneOmittedOneBedroom = decrementOneBedroomUnit(testUnitMap);
   const adjustedUnits = adjustRents(
     unitsWithOneOmittedOneBedroom,
-    estimatedMortgage
+    estimatedMortgage,
+    zipcode
   );
 
   return {
@@ -90,10 +92,10 @@ const calculateMortgage = (
 };
 
 // Calculates the total income brought from all units in the property
-const calculateIncome = (testUnitMap: UnitMap): number => {
+const calculateIncome = (testUnitMap: UnitMap, zipcode: string): number => {
   return Math.round(
     Object.keys(testUnitMap).reduce((totalIncome, unitType) => {
-      const price = unitMarketPrices[unitType as keyof UnitMap];
+      const price = unitMarketPrices(zipcode)[unitType as keyof UnitMap];
       return totalIncome + price * testUnitMap[unitType as keyof UnitMap].count;
     }, 0)
   );
@@ -103,20 +105,25 @@ const isNotZero = (value: number): number => (value === 0 ? 1 : value);
 
 export const adjustRents = (
   testUnitMap: UnitMap,
-  targetRent: number
+  targetRent: number,
+  zipcode: string
 ): UnitMap => {
   const adjustedUnitMarketPrices = JSON.parse(JSON.stringify(testUnitMap));
+
   // Calculate the total current rent
   const totalCurrentRent = Object.keys(adjustedUnitMarketPrices).reduce(
     (total, unitType) => {
       const unitCount = testUnitMap[unitType as keyof UnitMap].count;
-      const unitMarketPrice = unitMarketPrices[unitType as keyof UnitMap];
+      const unitMarketPrice =
+        unitMarketPrices(zipcode)[unitType as keyof UnitMap];
       return total + unitMarketPrice * unitCount;
     },
     0
   );
   // Calculate the scaling factor
   const scalingFactor = targetRent / isNotZero(totalCurrentRent);
+
+  // Adjust the rent for each unit
   Object.keys(adjustedUnitMarketPrices).forEach((unitType) => {
     adjustedUnitMarketPrices[unitType as keyof UnitMap].rent =
       adjustedUnitMarketPrices[unitType as keyof UnitMap].rent * scalingFactor;
@@ -145,3 +152,45 @@ export interface Property {
   interestRate: number;
   loanTermInYears: number;
 }
+
+export type RentData = {
+  [zipcode: string]: RentDataForZipCode;
+};
+
+export type RentDataForZipCode = {
+  Studio: number;
+  '1-Bedroom': number;
+  '2-Bedroom': number;
+  '3-Bedroom': number;
+  '4-Bedroom': number;
+};
+
+export const get2025MarketRent = (
+  zipcode: string
+): RentDataForZipCode | undefined => {
+  const zipData = MARKET_RATES_FOR_2025[zipcode];
+  if (!zipData) {
+    console.error(`Zipcode ${zipcode} not found in data.`);
+    return undefined;
+  }
+  return zipData;
+};
+
+export const getUnitMarketPrices = (zipcode: string): RentDataForZipCode => {
+  const data = get2025MarketRent(zipcode);
+  if (!data)
+    return {
+      Studio: 0,
+      '1-Bedroom': 0,
+      '2-Bedroom': 0,
+      '3-Bedroom': 0,
+      '4-Bedroom': 0,
+    };
+  return {
+    Studio: data.Studio,
+    '1-Bedroom': data['1-Bedroom'],
+    '2-Bedroom': data['2-Bedroom'],
+    '3-Bedroom': data['3-Bedroom'],
+    '4-Bedroom': data['4-Bedroom'],
+  };
+};

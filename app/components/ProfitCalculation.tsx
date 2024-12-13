@@ -16,7 +16,7 @@ export const ProfitCalculation = (infoMap: Props) => {
     const indicator = percentage > 100 ? '↑' : percentage < 100 ? '↓' : '-';
     return (
       <span style={{ color, fontSize: '1em', fontWeight: 'bold' }}>
-        {100 - percentage}% {indicator}
+        {Math.abs(100 - percentage)}% {indicator}
       </span>
     );
   };

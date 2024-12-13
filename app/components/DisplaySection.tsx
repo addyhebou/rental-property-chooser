@@ -8,10 +8,10 @@ import Image from 'next/image';
 import { RentFreeDetails } from './RentFreeDetails';
 import { ProfitCalculation } from './ProfitCalculation';
 import { useStore } from '../useStore';
-import { formatCurrency, handleValueChange, Property } from '../utils';
+import { formatCurrency, handleValueChange } from '../utils';
 
 export const DisplaySection = () => {
-  const { testUnitMap, storeUnitMap, setEstimatedMortgage } = useStore();
+  const { setEstimatedMortgage } = useStore();
   const { verdict, profit, estimatedMortgage, estimatedIncome, adjustedUnits } =
     handleValueChange();
   useEffect(() => {

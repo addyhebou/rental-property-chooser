@@ -5,9 +5,9 @@ import { formFieldStyles } from './FormFieldStyles';
 interface Props {
   type: string;
   label: string;
-  fieldType: 'number';
-  value: number | UnitMap;
-  onChange: (value: number | UnitMap) => void;
+  fieldType: 'number' | 'text';
+  value: number | UnitMap | string;
+  onChange: (value: number | UnitMap | string) => void;
 }
 export const FormField = ({
   type,
@@ -34,6 +34,12 @@ export const FormField = ({
           type={fieldType}
           value={value}
           onChange={(e) => onChange(Number(e.target.value) as number)}
+        />
+      ) : typeof value === 'string' ? (
+        <input
+          type={fieldType}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
       ) : (
         <div

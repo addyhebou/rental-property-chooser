@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { UnitMap } from './types';
 import { unitMarketPrices } from './constants';
-import { use } from 'react';
 
 // Define the shape of the store
 interface StoreState {
@@ -11,8 +10,6 @@ interface StoreState {
   setInterestRate: (rate: number) => void;
   loanTermInYears: number;
   setLoanTermInYears: (term: number) => void;
-  storeUnitMap: UnitMap;
-  setStoreUnitMap: (storeUnitMap: UnitMap) => void;
   verdict: string;
   setVerdict: (verdict: string) => void;
   profit: string;
@@ -23,10 +20,13 @@ interface StoreState {
   setEstimatedIncome: (estimatedIncome: number) => void;
   testUnitMap: UnitMap;
   setTestUnitMap: (testUnitMap: UnitMap) => void;
+  zipcode: string;
+  setZipcode: (zipcode: string) => void;
 }
 
 // Create a store with the initial state
 export const useStore = create<StoreState>((set) => {
+  const initialZipcode = '90034';
   return {
     homePrice: 0,
     setHomePrice: (homePrice) => set({ homePrice }),
@@ -34,49 +34,26 @@ export const useStore = create<StoreState>((set) => {
     setInterestRate: (interestRate) => set({ interestRate }),
     loanTermInYears: 30,
     setLoanTermInYears: (loanTermInYears) => set({ loanTermInYears }),
-    storeUnitMap: {
-      Studio: {
-        count: 0,
-        rent: unitMarketPrices['Studio'],
-      },
-      '1-Bedroom': {
-        count: 0,
-        rent: unitMarketPrices['1-Bedroom'],
-      },
-      '2-Bedroom': {
-        count: 0,
-        rent: unitMarketPrices['2-Bedroom'],
-      },
-      '3-Bedroom': {
-        count: 0,
-        rent: unitMarketPrices['3-Bedroom'],
-      },
-      '4-Bedroom': {
-        count: 0,
-        rent: unitMarketPrices['4-Bedroom'],
-      },
-    },
-    setStoreUnitMap: (storeUnitMap) => set({ storeUnitMap }),
     testUnitMap: {
       Studio: {
         count: 0,
-        rent: unitMarketPrices['Studio'],
+        rent: unitMarketPrices(initialZipcode)['Studio'],
       },
       '1-Bedroom': {
         count: 0,
-        rent: unitMarketPrices['1-Bedroom'],
+        rent: unitMarketPrices(initialZipcode)['1-Bedroom'],
       },
       '2-Bedroom': {
         count: 0,
-        rent: unitMarketPrices['2-Bedroom'],
+        rent: unitMarketPrices(initialZipcode)['2-Bedroom'],
       },
       '3-Bedroom': {
         count: 0,
-        rent: unitMarketPrices['3-Bedroom'],
+        rent: unitMarketPrices(initialZipcode)['3-Bedroom'],
       },
       '4-Bedroom': {
         count: 0,
-        rent: unitMarketPrices['4-Bedroom'],
+        rent: unitMarketPrices(initialZipcode)['4-Bedroom'],
       },
     },
     setTestUnitMap: (testUnitMap) => {
@@ -90,6 +67,8 @@ export const useStore = create<StoreState>((set) => {
     setEstimatedMortgage: (estimatedMortgage) => set({ estimatedMortgage }),
     estimatedIncome: 0,
     setEstimatedIncome: (estimatedIncome) => set({ estimatedIncome }),
+    zipcode: initialZipcode,
+    setZipcode: (zipcode) => set({ zipcode }),
   };
 });
 

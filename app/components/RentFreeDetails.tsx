@@ -7,7 +7,7 @@ import { adjustRents, decrementOneBedroomUnit } from '../utils';
 import { unitMarketPrices } from '../constants';
 
 export const RentFreeDetails = () => {
-  const { testUnitMap, estimatedMortgage } = useStore();
+  const { testUnitMap, estimatedMortgage, zipcode } = useStore();
 
   const UnitRentDetails = ({
     typeOfUnit,
@@ -21,11 +21,12 @@ export const RentFreeDetails = () => {
     if (numberOfAvailableUnits === 0) {
       return;
     }
-    const marketUnitRent = unitMarketPrices[typeOfUnit];
+    const marketUnitRent = unitMarketPrices(zipcode)[typeOfUnit];
     const unitsWithOneOmittedOneBedroom = decrementOneBedroomUnit(testUnitMap);
     const adjustedUnits = adjustRents(
       unitsWithOneOmittedOneBedroom,
-      estimatedMortgage
+      estimatedMortgage,
+      zipcode
     );
     return (
       adjustedUnits[typeOfUnit].count > 0 && (
