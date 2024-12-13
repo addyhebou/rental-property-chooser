@@ -33,7 +33,7 @@ export const RentFreeDetails = () => {
         <ProfitCalculation
           row1Title={`Adjusted ${typeOfUnit} Unit`}
           row1Value={adjustedUnits[typeOfUnit].rent}
-          row2Title="Market Price 1-Bedroom Unit"
+          row2Title={`Market Price ${typeOfUnit} Unit`}
           row2Value={marketUnitRent}
           finalRowTitle="Rate Difference"
           showPercentage
