@@ -2577,4 +2577,11 @@ export const MARKET_RATES_FOR_2025: RentData = {
     '3-Bedroom': 3240,
     '4-Bedroom': 3590,
   },
+  '91505': {
+    Studio: 2450,
+    '1-Bedroom': 2740,
+    '2-Bedroom': 3460,
+    '3-Bedroom': 4400,
+    '4-Bedroom': 4870,
+  },
 };
