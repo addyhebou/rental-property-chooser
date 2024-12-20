@@ -71,11 +71,3 @@ export const useStore = create<StoreState>((set) => {
     setZipcode: (zipcode) => set({ zipcode }),
   };
 });
-
-// Subscribe to changes in testUnitMap
-useStore.subscribe((state) =>
-  console.log({ 'Changed state.testUnitMap': state.testUnitMap })
-);
-
-const testUnitMap = useStore.getState().testUnitMap;
-console.log('Initial state.testUnitMap:', testUnitMap);
