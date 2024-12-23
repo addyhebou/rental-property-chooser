@@ -1,7 +1,11 @@
 import React from 'react';
 import { useStore } from '../useStore';
 import { FormField } from './FormField';
-import { formStyles, inputSectionStyles } from './InputSectionStyles';
+import {
+  formStyles,
+  inputSectionStyles,
+  resetButtonStyles,
+} from './InputSectionStyles';
 import { UnitMap } from '../types';
 import { get2025MarketRent, handleValueChange } from '../utils';
 import { unitMarketPrices } from '../constants';
@@ -120,6 +124,21 @@ export const InputSection = () => {
           fieldType="number"
           onChange={(value) => setTestUnitMap(value as UnitMap)}
         />
+        <button
+          type={'reset'}
+          onClick={() =>
+            setTestUnitMap({
+              Studio: { count: 0, rent: 0 },
+              '1-Bedroom': { count: 0, rent: 0 },
+              '2-Bedroom': { count: 0, rent: 0 },
+              '3-Bedroom': { count: 0, rent: 0 },
+              '4-Bedroom': { count: 0, rent: 0 },
+            })
+          }
+          className={resetButtonStyles}
+        >
+          Clear Units
+        </button>
       </form>
     </div>
   );

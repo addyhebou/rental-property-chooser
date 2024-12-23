@@ -15,3 +15,16 @@ export const formStyles = css({
   gap: '14px',
   display: 'inline-flex',
 });
+
+export const resetButtonStyles = css({
+  backgroundColor: 'white',
+  color: 'black',
+  border: '1px solid orange',
+  borderRadius: '5px',
+  padding: '10px',
+  cursor: 'pointer',
+  ':hover': {
+    backgroundColor: 'orange',
+    color: 'white',
+  },
+});
